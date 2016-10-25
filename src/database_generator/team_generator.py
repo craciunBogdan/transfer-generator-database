@@ -86,13 +86,7 @@ start_time = time.time()
 conn = sqlite3.connect("main.db")
 print("Opened database successfully!")
 
-# Remove the previous table.
-conn.execute("DROP TABLE teams")
-
-print("Clean-up successful")
-
-    
-conn.execute("CREATE TABLE teams (id INT PRIMARY KEY, name TEXT, league_id INT, squad_size INT, total_value INT, avg_value INT, href TEXT);")
+conn.execute("CREATE TABLE Teams (id INT PRIMARY KEY, name TEXT, league_id INT, squad_size INT, total_value INT, avg_value INT, href TEXT);")
 
 print("Created table successfully")
 print
@@ -105,7 +99,7 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 teamId = 0
 teamId2 = 0
 
-cursor = conn.execute("SELECT * FROM leagues;")
+cursor = conn.execute("SELECT * FROM Leagues;")
 for row in cursor:
     leagueId = int(row[0])
     leagueName = row[1]
@@ -132,7 +126,7 @@ for row in cursor:
                         break
                     teamName = singleQuoteFix(parsed[i].string)
                     previousString = teamName
-                    execute = "INSERT INTO teams (id, name, league_id, href) VALUES (%s, '%s', '%s', '%s');" % (str(teamId), teamName, str(leagueId), parsed[i]["href"])
+                    execute = "INSERT INTO Teams (id, name, league_id, href) VALUES (%s, '%s', '%s', '%s');" % (str(teamId), teamName, str(leagueId), parsed[i]["href"])
                     conn.execute(execute)
                     teamId += 1
         except KeyError:
@@ -141,35 +135,35 @@ for row in cursor:
     # Set squad size, total value and avg value. Also delete teams that do not have a total value or a squad size.
     for i in range(0, len(parsed)):
         try:
-            temporaryVariable = conn.execute("SELECT name FROM teams WHERE id = %s;" % (str(teamId2)))
+            temporaryVariable = conn.execute("SELECT name FROM Teams WHERE id = %s;" % (str(teamId2)))
             for row2 in temporaryVariable:
                 name = row2[0]
             parsed[i]['title'] = parsed[i]['title'].replace("&amp;", "&")
             if parsed[i]['title'] == name:
                 if (parsed[i].string == None or
                     (parsed[i+1].string == "-" and parsed[i].string.isnumeric())):
-                    print ("DELETE FROM teams WHERE id IS %s" % str(teamId2))
-                    conn.execute("DELETE FROM teams WHERE id IS %s" % str(teamId2))
+                    print ("DELETE FROM Teams WHERE id IS %s" % str(teamId2))
+                    conn.execute("DELETE FROM Teams WHERE id IS %s" % str(teamId2))
                     teamId2 += 1
                     teamId -= 1
                 elif parsed[i].string.isnumeric():
                     squadSize = int(parsed[i].string)
                     totalValue = value_convertor(parsed[i+1].string)
                     avgValue = round(totalValue / squadSize)
-                    conn.execute("UPDATE teams SET squad_size = '%s' WHERE id = %s;" % (squadSize, str(teamId2)))
-                    conn.execute("UPDATE teams SET total_value = '%s' WHERE id = %s;" % (totalValue, str(teamId2)))
-                    conn.execute("UPDATE teams SET avg_value = '%s' WHERE id = %s;" % (avgValue, str(teamId2)))
+                    conn.execute("UPDATE Teams SET squad_size = '%s' WHERE id = %s;" % (squadSize, str(teamId2)))
+                    conn.execute("UPDATE Teams SET total_value = '%s' WHERE id = %s;" % (totalValue, str(teamId2)))
+                    conn.execute("UPDATE Teams SET avg_value = '%s' WHERE id = %s;" % (avgValue, str(teamId2)))
                     teamId2 += 1
     
         except KeyError:
             continue
 
-    
+    # Due to the fact that the transfermarkt database gets updated constantly, the percentage might be wrong, depending on how long it has been since the last update of this file.
     print "{} ({}) successfully stored. {} % done. \n".format(leagueName.encode('utf8'), leagueNation, str(round((leagueId / 106.0) * 100.0, 2)))
 
 conn.commit()
 # Print the contents of the db. Mainly for debugging.
-cursor = conn.execute("SELECT * from teams")
+cursor = conn.execute("SELECT * from Teams")
    
 file = open('debug.txt', 'w')
    

@@ -15,13 +15,8 @@ conn = sqlite3.connect("main.db")
 
 print("Opened database successfully!")
 
-# Remove the old table.
-conn.execute("DROP TABLE leagues")
-
-print("Clean-up successful")
-
 # Create a new table.
-conn.execute("CREATE TABLE leagues (id INT PRIMARY KEY, name TEXT, nation TEXT, href TEXT);")
+conn.execute("CREATE TABLE Leagues (id INT PRIMARY KEY, name TEXT, nation TEXT, href TEXT);")
 
 print("Created table successfully")
 
@@ -54,8 +49,7 @@ for i in forRange:
         (not parsed[i]['title'].__contains__("UEFA")) and
         (parsed[i]['title'] != "Navigation") and
         (parsed[i]['title'] != "Advanced player search")):
-            #execute = "INSERT INTO leagues (id, name, nation) VALUES (" + str(leagueId) + ", '" + parsed[i]['title'] + "', '" + parsed[i + 1]['title'] + "');"
-            execute = "INSERT INTO leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
+            execute = "INSERT INTO Leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
             conn.execute(execute)
             leagueId += 1
             forRange.remove(i + 1)
@@ -69,15 +63,13 @@ parsed = soup('a')
 
 for i in range(0, len(parsed)):
     try:
-        #temporaryVariable = conn.execute("SELECT name FROM leagues WHERE id = " + str(leagueId2) + ";")
-        temporaryVariable = conn.execute("SELECT name FROM leagues WHERE id = %s;" % (str(leagueId2)))
+        temporaryVariable = conn.execute("SELECT name FROM Leagues WHERE id = %s;" % (str(leagueId2)))
         for row in temporaryVariable:
             name = row[0]
             
         if parsed[i]['title'] == name:
             href = parsed[i]['href']
-            #conn.execute("UPDATE leagues SET href = '" + href + "' WHERE id = " + str(leagueId2) + ";")
-            conn.execute("UPDATE leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
+            conn.execute("UPDATE Leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
             leagueId2 += 1
 
     except KeyError:
@@ -102,7 +94,7 @@ for i in forRange:
         (not parsed[i]['title'].__contains__("UEFA")) and
         (parsed[i]['title'] != "Navigation") and
         (parsed[i]['title'] != "Advanced player search")):
-            execute = "INSERT INTO leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
+            execute = "INSERT INTO Leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
             conn.execute(execute)
             leagueId += 1
             forRange.remove(i + 1)
@@ -113,14 +105,14 @@ parsed = soup('a')
 
 for i in range(0, len(parsed)):
     try:
-        temporaryVariable = conn.execute("SELECT name FROM leagues WHERE id = %s;" % (str(leagueId2)))
+        temporaryVariable = conn.execute("SELECT name FROM Leagues WHERE id = %s;" % (str(leagueId2)))
         
         for row in temporaryVariable:
             name = row[0]
             
         if parsed[i]['title'] == name:
             href = parsed[i]['href']
-            conn.execute("UPDATE leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
+            conn.execute("UPDATE Leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
             leagueId2 += 1
 
     except KeyError:
@@ -145,7 +137,7 @@ for i in forRange:
         (not parsed[i]['title'].__contains__("UEFA")) and
         (parsed[i]['title'] != "Navigation") and
         (parsed[i]['title'] != "Advanced player search")):
-            execute = "INSERT INTO leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])  
+            execute = "INSERT INTO Leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])  
             conn.execute(execute)
             leagueId += 1
             forRange.remove(i + 1)
@@ -156,14 +148,14 @@ parsed = soup('a')
 
 for i in range(0, len(parsed)):
     try:
-        temporaryVariable = conn.execute("SELECT name FROM leagues WHERE id = %s;" % (str(leagueId2)))
+        temporaryVariable = conn.execute("SELECT name FROM Leagues WHERE id = %s;" % (str(leagueId2)))
         
         for row in temporaryVariable:
             name = row[0]
             
         if parsed[i]['title'] == name:
             href = parsed[i]['href']
-            conn.execute("UPDATE leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
+            conn.execute("UPDATE Leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
             leagueId2 += 1
 
     except KeyError:
@@ -193,7 +185,7 @@ for i in forRange:
         (not parsed[i]['title'].__contains__("East Asian")) and
         (parsed[i]['title'] != "Navigation") and
         (parsed[i]['title'] != "Advanced player search")):
-            execute = "INSERT INTO leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
+            execute = "INSERT INTO Leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
             conn.execute(execute)
             leagueId += 1
             forRange.remove(i + 1)
@@ -204,14 +196,14 @@ parsed = soup('a')
 
 for i in range(0, len(parsed)):
     try:
-        temporaryVariable = conn.execute("SELECT name FROM leagues WHERE id = %s;" % (str(leagueId2)))
+        temporaryVariable = conn.execute("SELECT name FROM Leagues WHERE id = %s;" % (str(leagueId2)))
         
         for row in temporaryVariable:
             name = row[0]
             
         if parsed[i]['title'] == name:
             href = parsed[i]['href']
-            conn.execute("UPDATE leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
+            conn.execute("UPDATE Leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
             leagueId2 += 1
 
     except KeyError:
@@ -248,7 +240,7 @@ for i in forRange:
         (not parsed[i]['title'].__contains__("Uruguay")) and
         (parsed[i]['title'] != "Navigation") and
         (parsed[i]['title'] != "Advanced player search")):
-            execute = "INSERT INTO leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
+            execute = "INSERT INTO Leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
             conn.execute(execute)
             leagueId += 1
             forRange.remove(i + 1)
@@ -259,14 +251,14 @@ parsed = soup('a')
 
 for i in range(0, len(parsed)):
     try:
-        temporaryVariable = conn.execute("SELECT name FROM leagues WHERE id = %s;" % (str(leagueId2)))
+        temporaryVariable = conn.execute("SELECT name FROM Leagues WHERE id = %s;" % (str(leagueId2)))
         
         for row in temporaryVariable:
             name = row[0]
             
         if parsed[i]['title'] == name:
             href = parsed[i]['href']
-            conn.execute("UPDATE leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
+            conn.execute("UPDATE Leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
             leagueId2 += 1
 
     except KeyError:
@@ -293,7 +285,7 @@ for i in forRange:
         (not parsed[i]['title'].__contains__("Cup")) and 
         (parsed[i]['title'] != "Navigation") and
         (parsed[i]['title'] != "Advanced player search")):
-            execute = "INSERT INTO leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
+            execute = "INSERT INTO Leagues (id, name, nation) VALUES (%s, '%s', '%s');" % (str(leagueId), parsed[i]['title'], parsed[i + 1]['title'])
             conn.execute(execute)
             leagueId += 1
             forRange.remove(i + 1)
@@ -304,14 +296,14 @@ parsed = soup('a')
 
 for i in range(0, len(parsed)):
     try:
-        temporaryVariable = conn.execute("SELECT name FROM leagues WHERE id = %s;" % (str(leagueId2)))
+        temporaryVariable = conn.execute("SELECT name FROM Leagues WHERE id = %s;" % (str(leagueId2)))
         
         for row in temporaryVariable:
             name = row[0]
             
         if parsed[i]['title'] == name:
             href = parsed[i]['href']
-            conn.execute("UPDATE leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
+            conn.execute("UPDATE Leagues SET href = '%s' WHERE id = %s;" % (href, str(leagueId2)))
             leagueId2 += 1
 
     except KeyError:
@@ -324,7 +316,7 @@ print("Records created successfully")
 
 
 # Print the contents of the db. Mainly for debugging.
-cursor = conn.execute("SELECT * from leagues")
+cursor = conn.execute("SELECT * from Leagues")
  
 for row in cursor:
     print "ID = ", row[0]

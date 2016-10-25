@@ -63,12 +63,7 @@ start_time = time.time()
 conn = sqlite3.connect("main.db")
 print("Opened database successfully!")
 
-# Remove the previous table.
-conn.execute("DROP TABLE players")
-
-print("Clean-up successful")
-
-conn.execute("CREATE TABLE players (id INT PRIMARY KEY, name TEXT, team_id INT, position TEXT, age INT, nationality TEXT, value INT, href TEXT);")
+conn.execute("CREATE TABLE Players (id INT PRIMARY KEY, name TEXT, team_id INT, position TEXT, age INT, nationality TEXT, value INT, href TEXT);")
 
 print("Created table successfully")
 print
@@ -81,7 +76,7 @@ opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 playerId = 0
 playerIdPrevious = 0
 
-cursor = conn.execute("SELECT * FROM teams;")
+cursor = conn.execute("SELECT * FROM Teams;")
 
 for row in cursor:
     teamId = int(row[0])
@@ -108,7 +103,7 @@ for row in cursor:
             if (parsed[i]['class'].__contains__("spielprofil_tooltip")):
                 if (parsed[i].parent['class'][0].__contains__("hide-for-small")):
                     playerName = singleQuoteFix(parsed[i].string)
-                    execute = "INSERT INTO players (id, name, team_id, href) VALUES (%s, '%s', '%s', '%s');" % (str(playerId), playerName, teamId, parsed[i]['href'])
+                    execute = "INSERT INTO Players (id, name, team_id, href) VALUES (%s, '%s', '%s', '%s');" % (str(playerId), playerName, teamId, parsed[i]['href'])
                     conn.execute(execute)
                     playerId += 1
         except KeyError:
@@ -127,7 +122,7 @@ for row in cursor:
             if (parsed[i]['class'].__contains__("flaggenrahmen") and
                 parsed[i].parent.name == u'td' and
                 parsed[i].parent.parent['class'][0] != trClass):
-                conn.execute("UPDATE players SET nationality = '%s' WHERE id = %s;" % (singleQuoteFix(parsed[i]['title']), playerId1))
+                conn.execute("UPDATE Players SET nationality = '%s' WHERE id = %s;" % (singleQuoteFix(parsed[i]['title']), playerId1))
                 playerId1 += 1
                 if trClass == u'odd':
                     trClass = u'even'
@@ -166,19 +161,19 @@ for row in cursor:
                     playerAge = getAge(parsed[i + x].contents[0])
                     if playerAge == None:
                         break
-                    conn.execute("UPDATE players SET position = '%s' WHERE id = %s;" % (playerPosition, playerId2))
+                    conn.execute("UPDATE Players SET position = '%s' WHERE id = %s;" % (playerPosition, playerId2))
                     if not playerAge.__contains__("-"):
-                        conn.execute("UPDATE players SET age = %s WHERE id = %s;" % (playerAge, playerId2))
+                        conn.execute("UPDATE Players SET age = %s WHERE id = %s;" % (playerAge, playerId2))
                     else:
-                        conn.execute("UPDATE players SET age = %s WHERE id = %s;" % (0, playerId2))
+                        conn.execute("UPDATE Players SET age = %s WHERE id = %s;" % (0, playerId2))
                     playerId2 += 1
             if (parsed[i]['class'].__contains__("rechts") and
                 parsed[i]['class'].__contains__("hauptlink")):
                     if len(parsed[i].contents[0]) == 1:
-                        conn.execute("UPDATE players SET value = %s WHERE id = %s;" % (0, playerId1))
+                        conn.execute("UPDATE Players SET value = %s WHERE id = %s;" % (0, playerId1))
                     else:
                         playerValue = value_convertor(parsed[i].contents[0][:len(parsed[i].contents[0]) - 1])
-                        conn.execute("UPDATE players SET value = %s WHERE id = %s;" % (str(playerValue), playerId1))
+                        conn.execute("UPDATE Players SET value = %s WHERE id = %s;" % (str(playerValue), playerId1))
                     playerId1 += 1
         except KeyError:
             continue
@@ -188,23 +183,23 @@ for row in cursor:
         
 
 # Change some positions in order to minimise the total number of positions.        
-conn.execute("UPDATE players SET position = 'Right Wing' WHERE position = 'Right Midfield'")
-conn.execute("UPDATE players SET position = 'Centre Forward' WHERE position = 'Secondary Striker'")
-conn.execute("UPDATE players SET position = 'Left Wing' WHERE position = 'Left Midfield'")
-conn.execute("UPDATE players SET position = 'Central Midfield' WHERE position = 'Midfield'")
-conn.execute("UPDATE players SET position = 'Centre Back' WHERE position = 'Defence'")
-conn.execute("UPDATE players SET position = 'Centre Forward' WHERE position = 'Striker'")
-conn.execute("UPDATE players SET position = 'Centre Back' WHERE position = 'Sweeper'")
-conn.execute("UPDATE players SET position = 'Central Midfield' WHERE position = 'Mittelfeld'")
-conn.execute("UPDATE players SET position = 'Centre Back' WHERE position = 'Abwehr'")
-conn.execute("UPDATE players SET position = 'Centre Forward' WHERE position = 'Sturm'")
+conn.execute("UPDATE Players SET position = 'Right Wing' WHERE position = 'Right Midfield'")
+conn.execute("UPDATE Players SET position = 'Centre Forward' WHERE position = 'Secondary Striker'")
+conn.execute("UPDATE Players SET position = 'Left Wing' WHERE position = 'Left Midfield'")
+conn.execute("UPDATE Players SET position = 'Central Midfield' WHERE position = 'Midfield'")
+conn.execute("UPDATE Players SET position = 'Centre Back' WHERE position = 'Defence'")
+conn.execute("UPDATE Players SET position = 'Centre Forward' WHERE position = 'Striker'")
+conn.execute("UPDATE Players SET position = 'Centre Back' WHERE position = 'Sweeper'")
+conn.execute("UPDATE Players SET position = 'Central Midfield' WHERE position = 'Mittelfeld'")
+conn.execute("UPDATE Players SET position = 'Centre Back' WHERE position = 'Abwehr'")
+conn.execute("UPDATE Players SET position = 'Centre Forward' WHERE position = 'Sturm'")
         
 conn.commit()
 
 print "Database created successfully, proccess took %s seconds." % (time.time() - start_time)
 
 # Print all players.
-cursor = conn.execute("SELECT * from players")
+cursor = conn.execute("SELECT * from Players")
    
 file = open('debug_players.txt', 'w')
 
